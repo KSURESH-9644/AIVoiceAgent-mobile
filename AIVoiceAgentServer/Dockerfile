@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["AIVoiceAgentServer.csproj", "./"]
+COPY ["AIVoiceAgentServer.csproj", "."]
 RUN dotnet restore "AIVoiceAgentServer.csproj"
 COPY . .
 RUN dotnet publish -c Release -o /app/publish
