@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace AIVoiceAgentServer.Controllers
+[ApiController]
+[Route("api/chat")]
+public class ChatController : ControllerBase
 {
-    public class ChatController : Controller
-    {
-        public IActionResult Index()
-        {
-            return View();
-        }
-    }
+    // future text-chat implementation
 }

@@ -1,12 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace AIVoiceAgentServer.Controllers
+namespace AIVoiceAgentServer.Controllers;
+
+[ApiController]
+[Route("api/health")]
+public sealed class HealthController : ControllerBase
 {
-    public class HealthController : Controller
+    [HttpGet]
+    public IActionResult Get()
     {
-        public IActionResult Index()
+        return Ok(new
         {
-            return View();
-        }
+            status = "ok",
+            service = "AIVoiceAgentServer"
+        });
     }
 }
