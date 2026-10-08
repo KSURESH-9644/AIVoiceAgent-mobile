@@ -1,13 +1,11 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-COPY ["AIVoiceAgentServer/AIVoiceAgentServer.csproj", "AIVoiceAgentServer/"]
+COPY ["AIVoiceAgentServer.csproj", "./"]
 
-RUN dotnet restore "AIVoiceAgentServer/AIVoiceAgentServer.csproj"
+RUN dotnet restore "AIVoiceAgentServer.csproj"
 
 COPY . .
-
-WORKDIR "/src/AIVoiceAgentServer"
 
 RUN dotnet publish "AIVoiceAgentServer.csproj" \
     -c Release \
@@ -15,13 +13,10 @@ RUN dotnet publish "AIVoiceAgentServer.csproj" \
     --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
-
 WORKDIR /app
 
 ENV ASPNETCORE_HTTP_PORTS=8080
-
 EXPOSE 8080
 
 COPY --from=build /app/publish .
-
 ENTRYPOINT ["dotnet", "AIVoiceAgentServer.dll"]
