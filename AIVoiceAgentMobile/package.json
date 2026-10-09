@@ -1,6 +1,6 @@
 {
   "name": "AIVoiceAgentMobile",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -16,7 +16,6 @@
     "axios": "^1.20.0",
     "react": "19.2.3",
     "react-native": "0.87.1",
-    "react-native-code-push": "^9.0.1",
     "react-native-device-info": "^15.0.2",
     "react-native-fs": "^2.20.0",
     "react-native-nitro-modules": "^0.37.1",

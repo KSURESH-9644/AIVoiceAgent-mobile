@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import axios from 'axios';
-import codePush from 'react-native-code-push';
 import AppNavigator from './src/navigation/AppNavigator';
 import { initializeApp } from './src/services/appStartup';
 
@@ -76,5 +75,4 @@ const styles = StyleSheet.create({
   retryText: { color: '#FFFFFF', fontWeight: '600' },
 });
 
-const CodePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_START };
-export default codePush(CodePushOptions)(App);
+export default App;
