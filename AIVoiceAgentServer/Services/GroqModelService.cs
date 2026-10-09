@@ -17,49 +17,26 @@ public sealed class GroqModelService : IGroqModelService
         PropertyNameCaseInsensitive = true
     };
 
-    public GroqModelService(
-        HttpClient httpClient,
-        IOptions<GroqOptions> options)
+    public GroqModelService(HttpClient httpClient, IOptions<GroqOptions> options)
     {
         _httpClient = httpClient;
         _options = options.Value;
     }
 
-    public async Task<IReadOnlyList<GroqModel>>
-        GetAvailableModelsAsync(
-            CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<GroqModel>> GetAvailableModelsAsync(CancellationToken cancellationToken = default)
     {
-        using var request =
-            new HttpRequestMessage(
-                HttpMethod.Get,
-                "models");
+        using var request = new HttpRequestMessage(HttpMethod.Get, "models");
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _options.ApiKey);
 
-        request.Headers.Authorization =
-            new AuthenticationHeaderValue(
-                "Bearer",
-                _options.ApiKey);
-
-        using var response =
-            await _httpClient.SendAsync(
-                request,
-                cancellationToken);
-
-        var content =
-            await response.Content.ReadAsStringAsync(
-                cancellationToken);
+        using var response = await _httpClient.SendAsync(request, cancellationToken);
+        var content = await response.Content.ReadAsStringAsync(cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {
-            throw new HttpRequestException(
-                $"Groq model request failed. " +
-                $"Status: {(int)response.StatusCode}. " +
-                $"Response: {content}");
+            throw new HttpRequestException($"Groq model request failed. Status: {(int)response.StatusCode}. Response: {content}");
         }
 
-        var result =
-            JsonSerializer.Deserialize<ModelCatalogResponse>(
-                content,
-                JsonOptions);
+        var result = JsonSerializer.Deserialize<ModelCatalogResponse>(content, JsonOptions);
 
         return result?.Data
             .Where(x => x.Active)
@@ -68,14 +45,9 @@ public sealed class GroqModelService : IGroqModelService
             ?? [];
     }
 
-    public async Task<ModelCatalog>
-        GetCategorizedModelsAsync(
-            CancellationToken cancellationToken = default)
+    public async Task<ModelCatalog> GetCategorizedModelsAsync(CancellationToken cancellationToken = default)
     {
-        var models =
-            await GetAvailableModelsAsync(
-                cancellationToken);
-
+        var models = await GetAvailableModelsAsync(cancellationToken);
         var catalog = new ModelCatalog();
 
         foreach (var model in models)
@@ -97,58 +69,38 @@ public sealed class GroqModelService : IGroqModelService
         return catalog;
     }
 
-    private static bool IsSpeechToText(
-        string modelId)
+    private static bool IsSpeechToText(string modelId)
     {
-        return modelId.Contains(
-                   "whisper",
-                   StringComparison.OrdinalIgnoreCase);
+        return modelId.Contains("whisper", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static bool IsTextToSpeech(
-        string modelId)
+    private static bool IsTextToSpeech(string modelId)
     {
         var id = modelId.ToLowerInvariant();
 
-        // Exclude regional non-English Orpheus models to prevent language-mismatch TTS 502 errors
         if (id.Contains("arabic") || id.Contains("hindi") || id.Contains("spanish") || id.Contains("french"))
         {
             return false;
         }
 
-        return id.Contains(
-                   "orpheus",
-                   StringComparison.OrdinalIgnoreCase);
+        return id.Contains("orpheus", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static bool IsChatModel(
-        string modelId)
+    private static bool IsChatModel(string modelId)
     {
-        var id =
-            modelId.ToLowerInvariant();
+        var id = modelId.ToLowerInvariant();
 
-        if (id.Contains("whisper"))
+        if (id.Contains("whisper") || id.Contains("orpheus") || id.Contains("guard"))
         {
             return false;
         }
 
-        if (id.Contains("orpheus"))
-        {
-            return false;
-        }
-
-        if (id.Contains("guard"))
-        {
-            return false;
-        }
-
-        return
-            id.Contains("llama") ||
-            id.Contains("gpt") ||
-            id.Contains("qwen") ||
-            id.Contains("mistral") ||
-            id.Contains("gemma") ||
-            id.Contains("deepseek") ||
-            id.Contains("kimi");
+        return id.Contains("llama") ||
+               id.Contains("gpt") ||
+               id.Contains("qwen") ||
+               id.Contains("mistral") ||
+               id.Contains("gemma") ||
+               id.Contains("deepseek") ||
+               id.Contains("kimi");
     }
 }

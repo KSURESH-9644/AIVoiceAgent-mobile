@@ -10,22 +10,17 @@ public sealed class ModelController : ControllerBase
 {
     private readonly IGroqModelService _modelService;
 
-    public ModelController(
-        IGroqModelService modelService)
+    public ModelController(IGroqModelService modelService)
     {
         _modelService = modelService;
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetModels(
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> GetModels(CancellationToken cancellationToken)
     {
         try
         {
-            var catalog =
-                await _modelService
-                    .GetCategorizedModelsAsync(
-                        cancellationToken);
+            var catalog = await _modelService.GetCategorizedModelsAsync(cancellationToken);
 
             return Ok(new
             {
@@ -40,8 +35,7 @@ public sealed class ModelController : ControllerBase
                 new
                 {
                     success = false,
-                    message =
-                        "Unable to retrieve Groq models.",
+                    message = "Unable to retrieve Groq models.",
                     error = ex.Message
                 });
         }

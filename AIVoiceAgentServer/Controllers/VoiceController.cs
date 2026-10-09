@@ -32,54 +32,29 @@ public sealed class VoiceController : ControllerBase
         {
             if (string.IsNullOrWhiteSpace(request.AudioBase64))
             {
-                return BadRequest(
-                    new VoiceChatResponse
-                    {
-                        Success = false,
-                        Error = "Audio is required."
-                    });
+                return BadRequest(new VoiceChatResponse { Success = false, Error = "Audio is required." });
             }
 
             if (string.IsNullOrWhiteSpace(request.SttModel))
             {
-                return BadRequest(
-                    new VoiceChatResponse
-                    {
-                        Success = false,
-                        Error = "STT model is required."
-                    });
+                return BadRequest(new VoiceChatResponse { Success = false, Error = "STT model is required." });
             }
 
             if (string.IsNullOrWhiteSpace(request.ChatModel))
             {
-                return BadRequest(
-                    new VoiceChatResponse
-                    {
-                        Success = false,
-                        Error = "Chat model is required."
-                    });
+                return BadRequest(new VoiceChatResponse { Success = false, Error = "Chat model is required." });
             }
 
             if (string.IsNullOrWhiteSpace(request.TtsModel))
             {
-                return BadRequest(
-                    new VoiceChatResponse
-                    {
-                        Success = false,
-                        Error = "TTS model is required."
-                    });
+                return BadRequest(new VoiceChatResponse { Success = false, Error = "TTS model is required." });
             }
 
             var audioBytes = Convert.FromBase64String(request.AudioBase64);
 
             if (audioBytes.Length == 0)
             {
-                return BadRequest(
-                    new VoiceChatResponse
-                    {
-                        Success = false,
-                        Error = "Audio data is empty."
-                    });
+                return BadRequest(new VoiceChatResponse { Success = false, Error = "Audio data is empty." });
             }
 
             var fileName = string.IsNullOrWhiteSpace(request.FileName)
@@ -96,15 +71,14 @@ public sealed class VoiceController : ControllerBase
 
             if (string.IsNullOrWhiteSpace(userText))
             {
-                return Ok(
-                    new VoiceChatResponse
-                    {
-                        Success = true,
-                        UserText = string.Empty,
-                        AiText = "I didn't hear you clearly. Please try again.",
-                        AudioBase64 = string.Empty,
-                        AudioContentType = "audio/wav"
-                    });
+                return Ok(new VoiceChatResponse
+                {
+                    Success = true,
+                    UserText = string.Empty,
+                    AiText = "I didn't hear you clearly. Please try again.",
+                    AudioBase64 = string.Empty,
+                    AudioContentType = "audio/wav"
+                });
             }
 
             // STEP 2: Text -> AI response
@@ -130,55 +104,30 @@ public sealed class VoiceController : ControllerBase
                 voice,
                 cancellationToken);
 
-            return Ok(
-                new VoiceChatResponse
-                {
-                    Success = true,
-                    UserText = userText,
-                    AiText = aiText,
-                    AudioBase64 = Convert.ToBase64String(audio),
-                    AudioContentType = "audio/wav" // Correctly matches WAV response format
-                });
+            return Ok(new VoiceChatResponse
+            {
+                Success = true,
+                UserText = userText,
+                AiText = aiText,
+                AudioBase64 = Convert.ToBase64String(audio),
+                AudioContentType = "audio/wav"
+            });
         }
         catch (FormatException)
         {
-            return BadRequest(
-                new VoiceChatResponse
-                {
-                    Success = false,
-                    Error = "Invalid audio Base64 data."
-                });
+            return BadRequest(new VoiceChatResponse { Success = false, Error = "Invalid audio Base64 data." });
         }
-        catch (OperationCanceledException)
-            when (cancellationToken.IsCancellationRequested)
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
-            return StatusCode(
-                StatusCodes.Status499ClientClosedRequest,
-                new VoiceChatResponse
-                {
-                    Success = false,
-                    Error = "Voice request was cancelled."
-                });
+            return StatusCode(StatusCodes.Status499ClientClosedRequest, new VoiceChatResponse { Success = false, Error = "Voice request was cancelled." });
         }
         catch (HttpRequestException ex)
         {
-            return StatusCode(
-                StatusCodes.Status502BadGateway,
-                new VoiceChatResponse
-                {
-                    Success = false,
-                    Error = ex.Message
-                });
+            return StatusCode(StatusCodes.Status502BadGateway, new VoiceChatResponse { Success = false, Error = ex.Message });
         }
         catch (Exception ex)
         {
-            return StatusCode(
-                StatusCodes.Status500InternalServerError,
-                new VoiceChatResponse
-                {
-                    Success = false,
-                    Error = "Voice AI processing failed: " + ex.Message
-                });
+            return StatusCode(StatusCodes.Status500InternalServerError, new VoiceChatResponse { Success = false, Error = "Voice AI processing failed: " + ex.Message });
         }
     }
 
