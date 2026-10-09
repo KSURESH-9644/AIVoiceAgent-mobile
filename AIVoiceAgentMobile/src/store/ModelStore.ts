@@ -1,18 +1,12 @@
-import type {
-  CategorizedModelCatalog,
-} from '../types/models';
+import type { CategorizedModelCatalog } from '../types/models';
 
-let runtimeModels:
-  CategorizedModelCatalog | null = null;
+let runtimeModels: CategorizedModelCatalog | null = null;
 
-export function setRuntimeModels(
-  models: CategorizedModelCatalog,
-): void {
+export function setRuntimeModels(models: CategorizedModelCatalog): void {
   runtimeModels = models;
 }
 
-export function getRuntimeModels():
-  CategorizedModelCatalog | null {
+export function getRuntimeModels(): CategorizedModelCatalog | null {
   return runtimeModels;
 }
 

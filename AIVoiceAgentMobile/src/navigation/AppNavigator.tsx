@@ -1,25 +1,16 @@
 import React from 'react';
-
-import {
-  Text,
-} from 'react-native';
-
-import {
-  createBottomTabNavigator,
-} from '@react-navigation/bottom-tabs';
-
+import { Text } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AIVoiceScreen from '../screens/AIVoiceScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 
-const Tab =
-  createBottomTabNavigator();
+const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-
         tabBarStyle: {
           backgroundColor: '#111319',
           borderTopColor: '#252A36',
@@ -27,49 +18,24 @@ const AppNavigator = () => {
           paddingBottom: 8,
           paddingTop: 6,
         },
-
-        tabBarActiveTintColor:
-          '#6D85FF',
-
-        tabBarInactiveTintColor:
-          '#777D8D',
+        tabBarActiveTintColor: '#6D85FF',
+        tabBarInactiveTintColor: '#777D8D',
       }}
     >
       <Tab.Screen
         name="AIVoice"
-        component={
-          AIVoiceScreen
-        }
+        component={AIVoiceScreen}
         options={{
           title: 'AI Voice',
-          tabBarIcon: () => (
-            <Text
-              style={{
-                fontSize: 20,
-              }}
-            >
-              🎙
-            </Text>
-          ),
+          tabBarIcon: () => <Text style={{ fontSize: 20 }}>🎙</Text>,
         }}
       />
-
       <Tab.Screen
         name="Settings"
-        component={
-          SettingsScreen
-        }
+        component={SettingsScreen}
         options={{
           title: 'Settings',
-          tabBarIcon: () => (
-            <Text
-              style={{
-                fontSize: 20,
-              }}
-            >
-              ⚙
-            </Text>
-          ),
+          tabBarIcon: () => <Text style={{ fontSize: 20 }}>⚙</Text>,
         }}
       />
     </Tab.Navigator>

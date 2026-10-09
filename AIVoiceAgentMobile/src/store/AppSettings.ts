@@ -1,6 +1,4 @@
-import type {
-  AppSettings,
-} from '../types/voice';
+import type { AppSettings } from '../types/voice';
 
 let settings: AppSettings = {
   captureMode: 'auto',
@@ -12,20 +10,14 @@ let settings: AppSettings = {
 };
 
 export function getAppSettings(): AppSettings {
-  return {
-    ...settings,
-  };
+  return { ...settings };
 }
 
-export function updateAppSettings(
-  partial: Partial<AppSettings>,
-): AppSettings {
+export function updateAppSettings(partial: Partial<AppSettings>): AppSettings {
   settings = {
     ...settings,
     ...partial,
   };
 
-  return {
-    ...settings,
-  };
+  return { ...settings };
 }

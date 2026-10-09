@@ -1,23 +1,12 @@
-import {
-  getAvailableModels,
-} from './api';
+import { getAvailableModels } from './api';
+import { setRuntimeModels } from '../store/ModelStore';
 
-import {
-  setRuntimeModels,
-} from '../store/ModelStore';
-
-export async function initializeApp():
-  Promise<void> {
-  const result =
-    await getAvailableModels();
+export async function initializeApp(): Promise<void> {
+  const result = await getAvailableModels();
 
   if (!result.success) {
-    throw new Error(
-      'Unable to load available AI models.',
-    );
+    throw new Error('Unable to load available AI models.');
   }
 
-  setRuntimeModels(
-    result.data,
-  );
+  setRuntimeModels(result.data);
 }
